@@ -8,6 +8,7 @@ Ray tracing #1 : In one weekend
 - Visualize all the ray tracing examples explored in [this book](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
 - You can change between each examples with the keys from 'A' to 'T' in the order of the book
 - Once they are fully generated, they are saved on your computer
+- Pressing the '-', '=' or '+' keys display the scene in low, normal or high quality respectively (the scene is first displayed in low quality)
 
 ## Details
 | Programming language | Start and end date | Inspired by |
