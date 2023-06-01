@@ -1,102 +1,105 @@
-float normalScreenRatio = 16.0 / 9.0;
 
-Level uv;
-Level gradient;
-Level redSphere;
-Level normalSphere;
-Level normalGround;
-Level antiAliasing;
-Level unitRender;
-Level gammaRender;
-Level normalizedRender;
-Level hemiSphereRender;
-Level Metal;
-Level fuzzedMetal;
-Level Dielectric;
-Level refract;
-Level hollowGlass;
-Level blueRed;
-Level distantView;
-Level zoom;
-Level defocusBlur;
-Level finalScene;
+// The variables for the different scenes
+Scene uv;
+Scene gradient;
+Scene redSphere;
+Scene normalSphere;
+Scene normalGround;
+Scene antiAliasing;
+Scene unitRender;
+Scene gammaRender;
+Scene normalizedRender;
+Scene hemiSphereRender;
+Scene Metal;
+Scene fuzzyMetal;
+Scene dielectric;
+Scene reflect;
+Scene hollowGlass;
+Scene blueRed;
+Scene distantView;
+Scene zoom;
+Scene defocusBlur;
+Scene finalScene;
 
-Level currentLevel;
+Scene currentScene;
 
 /////////////////////////////////
 
 // Setup
 void setup() {
-  
-  uv = new Level(512, 1, 512);
+
+  // Setup all the scenes
+  uv = new Scene();
   uv.createUv();
-  
-  gradient = new Level(800, 1, 800);
+
+  gradient = new Scene();
   gradient.createGradient();
-  
-  redSphere= new Level(800, 1, 100);
+
+  redSphere= new Scene();
   redSphere.createRedSphere();
-  
-  normalSphere= new Level(800, 1, 10);
+
+  normalSphere= new Scene();
   normalSphere.createNormalSphere();
-  
-  normalGround = new Level(800, 1, 10);
-  normalGround.createNormalGround();
-  
-  antiAliasing = new Level(800, 10, 1);
-  antiAliasing.createNormalGround();
-  
-  unitRender = new Level(800, 10, 1);
+
+  normalGround = new Scene();
+  normalGround.createNormalGround(1);
+
+  antiAliasing = new Scene();
+  antiAliasing.createNormalGround(10);
+
+  unitRender = new Scene();
   unitRender.createUnitRender();
-  
-  gammaRender = new Level(800, 10, 1);
+
+  gammaRender = new Scene();
   gammaRender.createGammaRender();
-  
-  normalizedRender = new Level(800, 10, 1);
+
+  normalizedRender = new Scene();
   normalizedRender.createNormalizedRender();
-  
-  hemiSphereRender = new Level(800, 10, 1);
-  hemiSphereRender.createHemiSphereRender();
-  
-  Metal = new Level(800, 10, 1);
+
+  hemiSphereRender = new Scene();
+  hemiSphereRender.createHemisphereRender();
+
+  Metal = new Scene();
   Metal.createMetal();
-  
-  fuzzedMetal = new Level(800, 10, 1);
-  fuzzedMetal.createFuzzedMetal();
-  
-  Dielectric = new Level(800, 10, 1);
-  Dielectric.createDielectric();
-  
-  refract = new Level(800, 10, 1);
-  refract.createRefract();
-  
-  hollowGlass = new Level(800, 10, 1);
+
+  fuzzyMetal = new Scene();
+  fuzzyMetal.createFuzzyMetal();
+
+  dielectric = new Scene();
+  dielectric.createDielectric();
+
+  reflect = new Scene();
+  reflect.createReflect();
+
+  hollowGlass = new Scene();
   hollowGlass.createHollowGlass();
-  
-  blueRed = new Level(800, 10, 1);
+
+  blueRed = new Scene();
   blueRed.createBlueRed();
-  
-  distantView = new Level(800, 10, 1);
+
+  distantView = new Scene();
   distantView.createDistantView();
-  
-  zoom = new Level(800, 10, 1);
+
+  zoom = new Scene();
   zoom.createZoom();
-  
-  defocusBlur = new Level(800, 10, 1);
+
+  defocusBlur = new Scene();
   defocusBlur.createDefocusBlur();
-  
-  finalScene = new Level(400, 5, 1);
+
+  finalScene = new Scene();
   finalScene.createFinalScene();
-  
-  currentLevel = hollowGlass;
-  hollowGlass.changeLevel();
-  
-  frameRate(300);
+
+  // Set the default scene to be the hollow glass one
+  currentScene = hollowGlass;
+  hollowGlass.changeScene();
+
+  // Set the frame rate high
+  frameRate(500);
 }
 
-// Put pixel on screen at x, y with color rgb
-void setPixel(int x, int y, Vector3 rgb, int nSamples, boolean gammaCorrection) {
-  
+// Put pixel on screen at x, y with color rgb and gamma corection
+void setPixel(int x, int y, Vector3 rgb, int nSamples, boolean gammaCorection) {
+
   // Get vector values
   float r = rgb.x;
   float g = rgb.y;
@@ -104,134 +107,143 @@ void setPixel(int x, int y, Vector3 rgb, int nSamples, boolean gammaCorrection) 
 
   // Scale to average into a color based on number of samples
   float scale = 1.0 / nSamples;
-  if (gammaCorrection) {
-  
+
+  // If we want gamma corection
+  if (gammaCorection) {
+
+    // Light a bit more the color and scale the color based on the number of samples per pixel
     r = sqrt(scale * r);
     g = sqrt(scale * g);
     b = sqrt(scale * b);
-    
+
     // Map them between 0 and 256
     r = map(r, 0.0, 16.0, 0, 256);
     g = map(g, 0.0, 16.0, 0, 256);
     b = map(b, 0.0, 16.0, 0, 256);
   } else {
+
+    // Scale the color based on the number of samples per pixel
     r *= scale;
     g *= scale;
     b *= scale;
   }
 
+  // Create the final color of the pixel
   color finalColor = color(r, g, b);
-  // Put the color rgb on the screen at x, y
+
+  // Put the color on the screen at x, y and save it for the current scene
   set(x, height - y, finalColor);
-  currentLevel.level[height - y][x] = finalColor;
+  currentScene.scene[height - y][x] = finalColor;
 }
 
 // Draw the image
 void draw() {
-  if (currentLevel == uv) {
-    uvLoop();
-  } else if (currentLevel == redSphere) {
-    redSphereLoop(currentLevel);
-  } else if (currentLevel == normalSphere|| currentLevel == normalGround || currentLevel == antiAliasing) {
-    normalLoop(currentLevel);
-  } else if (currentLevel == unitRender) {
-    unitLoop(currentLevel, false);
-  } else if (currentLevel == gammaRender) {
-    unitLoop(currentLevel, true);
-  } else if (currentLevel == normalizedRender) {
-    normalizedLoop(currentLevel);
-  } else if (currentLevel == hemiSphereRender) {
-    hemiSphereLoop(currentLevel);
-  } else {
-    defaultLoop(currentLevel);
-  }
-}
 
-void changeRes() {
-  currentLevel.drawn = currentLevel.h;
-  
+  // Choose the correct loop based on the current scene
+  if (currentScene == uv) {
+    uvLoop();
+  } else if (currentScene == redSphere) {
+    redSphereLoop(currentScene);
+  } else if (currentScene == normalSphere|| currentScene == normalGround || currentScene == antiAliasing) {
+    normalLoop(currentScene);
+  } else if (currentScene == unitRender) {
+    UNHLoop(currentScene, false, 'u');
+  } else if (currentScene == gammaRender) {
+    UNHLoop(currentScene, true, 'u');
+  } else if (currentScene == normalizedRender) {
+    UNHLoop(currentScene, true, 'n');
+  } else if (currentScene == hemiSphereRender) {
+    UNHLoop(currentScene, true, 'h');
+  } else {
+    defaultLoop(currentScene);
+  }
 }
 
 void keyPressed() {
+
+  // If '+', '=' or '-', change the number of samples per pixel (changing the quality of the image)
+  // For the final scene, also change the screen size
+  // Update the variables of the scene
   if (key == '+') {
-    currentLevel.nSamplesPixel = 500;
-    if (currentLevel == finalScene) {
-      currentLevel.changeScreenSize(1200);
+    currentScene.nSamplesPixel = 500;
+    if (currentScene == finalScene) {
+      currentScene.changeScreenSize(1200);
     }
-    currentLevel.changeLevel();
+    currentScene.changeScene();
   } else if (key == '-') {
-    currentLevel.nSamplesPixel = 10;
-    if (currentLevel == finalScene) {
-      currentLevel.changeScreenSize(400);
+    currentScene.nSamplesPixel = 10;
+    if (currentScene == finalScene) {
+      currentScene.changeScreenSize(400);
     }
-    currentLevel.changeLevel();
+    currentScene.changeScene();
   } else if (key == '=') {
-    currentLevel.nSamplesPixel = 100;
-    if (currentLevel == finalScene) {
-      currentLevel.changeScreenSize(800);
+    currentScene.nSamplesPixel = 100;
+    if (currentScene == finalScene) {
+      currentScene.changeScreenSize(800);
     }
-    currentLevel.changeLevel();
+    currentScene.changeScene();
   }
-  
+
+  // Change to the corresponding scene from 'A' to 'T'
   if (key == 'a' || key == 'A') {
-    currentLevel = uv;
-    uv.changeLevel();
+    currentScene = uv;
+    uv.changeScene();
   } else if (key == 'b' || key == 'B') {
-    currentLevel = gradient;
-    gradient.changeLevel();
+    currentScene = gradient;
+    gradient.changeScene();
   } else if (key == 'c' || key == 'C') {
-    currentLevel = redSphere;
-    redSphere.changeLevel();
+    currentScene = redSphere;
+    redSphere.changeScene();
   } else if (key == 'd' || key == 'D') {
-    currentLevel = normalSphere;
-    normalSphere.changeLevel();
+    currentScene = normalSphere;
+    normalSphere.changeScene();
   } else if (key == 'e' || key == 'E') {
-    currentLevel = normalGround;
-    normalGround.changeLevel();
+    currentScene = normalGround;
+    normalGround.changeScene();
   } else if (key == 'f' || key == 'F') {
-    currentLevel = antiAliasing;
-    antiAliasing.changeLevel();
+    currentScene = antiAliasing;
+    antiAliasing.changeScene();
   } else if (key == 'g' || key == 'G') {
-    currentLevel = unitRender;
-    unitRender.changeLevel();
+    currentScene = unitRender;
+    unitRender.changeScene();
   } else if (key == 'h' || key == 'H') {
-    currentLevel = gammaRender;
-    gammaRender.changeLevel();
+    currentScene = gammaRender;
+    gammaRender.changeScene();
   } else if (key == 'i' || key == 'I') {
-    currentLevel = normalizedRender;
-    normalizedRender.changeLevel();
+    currentScene = normalizedRender;
+    normalizedRender.changeScene();
   } else if (key == 'j' || key == 'J') {
-    currentLevel = hemiSphereRender;
-    hemiSphereRender.changeLevel();
+    currentScene = hemiSphereRender;
+    hemiSphereRender.changeScene();
   } else if (key == 'k' || key == 'K') {
-    currentLevel = Metal;
-    Metal.changeLevel();
+    currentScene = Metal;
+    Metal.changeScene();
   } else if (key == 'l' || key == 'L') {
-    currentLevel = fuzzedMetal;
-    fuzzedMetal.changeLevel();
+    currentScene = fuzzyMetal;
+    fuzzyMetal.changeScene();
   } else if (key == 'm' || key == 'M') {
-    currentLevel = Dielectric;
-    Dielectric.changeLevel();
+    currentScene = dielectric;
+    dielectric.changeScene();
   } else if (key == 'n' || key == 'N') {
-    currentLevel = refract;
-    refract.changeLevel();
+    currentScene = reflect;
+    reflect.changeScene();
   } else if (key == 'o' || key == 'O') {
-    currentLevel = hollowGlass;
-    hollowGlass.changeLevel();
+    currentScene = hollowGlass;
+    hollowGlass.changeScene();
   } else if (key == 'p' || key == 'P') {
-    currentLevel = blueRed;
-    blueRed.changeLevel();
+    currentScene = blueRed;
+    blueRed.changeScene();
   } else if (key == 'q' || key == 'Q') {
-    currentLevel = distantView;
-    distantView.changeLevel();
+    currentScene = distantView;
+    distantView.changeScene();
   } else if (key == 'r' || key == 'R') {
-    currentLevel = zoom;
-    zoom.changeLevel();
+    currentScene = zoom;
+    zoom.changeScene();
   } else if (key == 's' || key == 'S') {
-    currentLevel = defocusBlur;
-    defocusBlur.changeLevel();
+    currentScene = defocusBlur;
+    defocusBlur.changeScene();
   } else if (key == 't' || key == 'T') {
-    currentLevel = finalScene;
-    finalScene.changeLevel();
+    currentScene = finalScene;
+    finalScene.changeScene();
   }
 }

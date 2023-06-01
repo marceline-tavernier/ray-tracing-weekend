@@ -91,11 +91,6 @@ class Vector3 {
     return this.sub(normal.mult((2 * this.dot(normal))));
   }
 
-  // Transform a vector to a color
-  color toColor() {
-    return color(x, y, z);
-  }
-
   // Return the refracted vector around the normal with the refractive indices
   Vector3 refract(Vector3 normal, float refracIndices) {
 
@@ -139,10 +134,10 @@ Vector3 randomUnitNormalized() {
   }
 }
 
-// Return a random unit vector in a hemiSphere
+// Return a random unit vector in a hemisphere
 Vector3 randomHemisphere(Vector3 normal) {
 
-  // Get a random unit vector and if in bottom half of Sphere, inverse it
+  // Get a random unit vector and if in bottom half of sphere, inverse it
   Vector3 v = randomUnit();
   if (v.dot(normal) > 0.0) {
     return v;
