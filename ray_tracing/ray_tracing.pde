@@ -29,64 +29,64 @@ Scene currentScene;
 void setup() {
 
   // Setup all the scenes
-  uv = new Scene();
+  uv = new Scene(1);
   uv.createUv();
 
-  gradient = new Scene();
+  gradient = new Scene(2);
   gradient.createGradient();
 
-  redSphere= new Scene();
+  redSphere= new Scene(3);
   redSphere.createRedSphere();
 
-  normalSphere= new Scene();
+  normalSphere= new Scene(4);
   normalSphere.createNormalSphere();
 
-  normalGround = new Scene();
+  normalGround = new Scene(5);
   normalGround.createNormalGround(1);
 
-  antiAliasing = new Scene();
+  antiAliasing = new Scene(6);
   antiAliasing.createNormalGround(10);
 
-  unitRender = new Scene();
+  unitRender = new Scene(7);
   unitRender.createUnitRender();
 
-  gammaRender = new Scene();
+  gammaRender = new Scene(8);
   gammaRender.createGammaRender();
 
-  normalizedRender = new Scene();
+  normalizedRender = new Scene(9);
   normalizedRender.createNormalizedRender();
 
-  hemiSphereRender = new Scene();
+  hemiSphereRender = new Scene(10);
   hemiSphereRender.createHemisphereRender();
 
-  Metal = new Scene();
+  Metal = new Scene(11);
   Metal.createMetal();
 
-  fuzzyMetal = new Scene();
+  fuzzyMetal = new Scene(12);
   fuzzyMetal.createFuzzyMetal();
 
-  dielectric = new Scene();
+  dielectric = new Scene(13);
   dielectric.createDielectric();
 
-  reflect = new Scene();
+  reflect = new Scene(14);
   reflect.createReflect();
 
-  hollowGlass = new Scene();
+  hollowGlass = new Scene(15);
   hollowGlass.createHollowGlass();
 
-  blueRed = new Scene();
+  blueRed = new Scene(16);
   blueRed.createBlueRed();
 
-  distantView = new Scene();
+  distantView = new Scene(17);
   distantView.createDistantView();
 
-  zoom = new Scene();
+  zoom = new Scene(18);
   zoom.createZoom();
 
-  defocusBlur = new Scene();
+  defocusBlur = new Scene(19);
   defocusBlur.createDefocusBlur();
 
-  finalScene = new Scene();
+  finalScene = new Scene(20);
   finalScene.createFinalScene();
 
   // Set the default scene to be the hollow glass one
@@ -144,7 +144,7 @@ void draw() {
     uvLoop();
   } else if (currentScene == redSphere) {
     redSphereLoop(currentScene);
-  } else if (currentScene == normalSphere|| currentScene == normalGround || currentScene == antiAliasing) {
+  } else if (currentScene == normalSphere|| currentScene == normalGround || currentScene == antiAliasing || currentScene == gradient) {
     normalLoop(currentScene);
   } else if (currentScene == unitRender) {
     UNHLoop(currentScene, false, 'u');
@@ -169,19 +169,26 @@ void keyPressed() {
     if (currentScene == finalScene) {
       currentScene.changeScreenSize(1200);
     }
+    currentScene.drawn = currentScene.h;
     currentScene.changeScene();
   } else if (key == '-') {
     currentScene.nSamplesPixel = 10;
     if (currentScene == finalScene) {
       currentScene.changeScreenSize(400);
     }
+    currentScene.drawn = currentScene.h;
     currentScene.changeScene();
   } else if (key == '=') {
     currentScene.nSamplesPixel = 100;
     if (currentScene == finalScene) {
       currentScene.changeScreenSize(800);
     }
+    currentScene.drawn = currentScene.h;
     currentScene.changeScene();
+  }
+  
+  if (key == ENTER || key == RETURN) {
+    saveFrame("images/scene-" + currentScene.nScene + "-quality-" + currentScene.nSamplesPixel + ".png");
   }
 
   // Change to the corresponding scene from 'A' to 'T'

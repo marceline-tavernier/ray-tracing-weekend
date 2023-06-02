@@ -26,16 +26,18 @@ class Scene {
   // Others
   color[][] scene = new color[h][w];
   int drawn = h;
+  int nScene = 0;
 
-  // No constructor needed;
-  Scene() {
+  // Construtor
+  Scene(int _nScene) {
+    nScene = _nScene;
   }
 
   // What to update when changing scenes
   void changeScene() {
 
-    // Set the default title to 0%
-    surface.setTitle("0%");
+    // Set the default title
+    surface.setTitle("Ray tracing #1 : In one weekend");
 
     // Set the size of the screen to w, h
     windowResize(w, h);

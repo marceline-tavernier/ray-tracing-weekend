@@ -5,6 +5,6 @@ void printProgress(int a, int b) {
 }
 
 // Change the title when finished to show the name
-void printDone(String nameScene) {
-  surface.setTitle(nameScene);
+void printDone() {
+  surface.setTitle("Ray tracing #1 : In one weekend");
 }
