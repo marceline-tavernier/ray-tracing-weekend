@@ -9,7 +9,7 @@ Ray tracing #1 : In one weekend
 - You can change between each scene with the keys from 'A' to 'T' in the order of the book
 - You can take a screenshot of the screen withe the 'Enter' key
 - Pressing the '-', '=' or '+' keys display the scene in low, normal or high quality respectively (the scene is first displayed in low quality)
-- The progress is reported in the title of the window (percentage and time remaining or , when finished, time taken to generate)
+- The progress is reported in the title of the window (percentage and time remaining or , when finished, the time taken to generate the image)
 
 ## Details
 | Programming language | Start and end date | Inspired by |
