@@ -1,3 +1,4 @@
+
 // The camera class
 class Camera {
   Vector3 origin;
@@ -12,11 +13,12 @@ class Camera {
     float h = tan(theta / 2);
     float viewportHeight = 2.0 * h;
     float viewportWidth = screenRatio * viewportHeight;
-    
+
+    // The z, x and y of the camera plane
     w = (lookFrom.sub(lookAt)).unit();
     u = (vecUp.cross(w)).unit();
     v = w.cross(u);
-    
+
     origin = lookFrom;
     horizontal = u.mult(viewportWidth * distFocus);
     vertical = v.mult(viewportHeight * distFocus);
@@ -24,17 +26,17 @@ class Camera {
     Vector3 _halfV = vertical.div(2);
     Vector3 _origHV = origin.sub(_halfH).sub(_halfV);
     lowerLeftCorner = _origHV.sub(w.mult(distFocus));
-    
+
     lensRadius = aperture / 2;
   }
 
   Ray getRay(float s, float t) {
-    Vector3 rd = randomDisk().mult(lensRadius);
-    Vector3 offset = u.mult(rd.x).add(v.mult(rd.y));
-    
-    Vector3 _uH = horizontal.mult(s);
-    Vector3 _vV = vertical.mult(t);
-    Vector3 dir = lowerLeftCorner.add(_uH).add(_vV).sub(origin.add(offset));
+    Vector3 randomDisk = randomDisk().mult(lensRadius);
+    Vector3 offset = u.mult(randomDisk.x).add(v.mult(randomDisk.y));
+
+    Vector3 _sH = horizontal.mult(s);
+    Vector3 _tV = vertical.mult(t);
+    Vector3 dir = lowerLeftCorner.add(_sH).add(_tV).sub(origin.add(offset));
     return new Ray(origin.add(offset), dir);
   }
 }

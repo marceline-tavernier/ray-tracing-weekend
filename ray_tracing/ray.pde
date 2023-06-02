@@ -32,7 +32,7 @@ Vector3 getGradientSky(Ray r) {
 Vector3 rayColorRedSphere(Ray r, Hittable world) {
 
   // Search the world for a hit
-  HitRecord rec = world.hit(r, 0.001, infinity);
+  HitRecord rec = world.hit(r, 0, infinity);
 
   // If the ray hit, return red
   if (rec.isHit) {
@@ -47,7 +47,7 @@ Vector3 rayColorRedSphere(Ray r, Hittable world) {
 Vector3 rayColorNormal(Ray r, Hittable world) {
 
   // Search the world for a hit
-  HitRecord rec = world.hit(r, 0.001, infinity);
+  HitRecord rec = world.hit(r, 0, infinity);
 
   // If the ray hit, return the color as an interpretation of the normal
   if (rec.isHit) {
@@ -59,7 +59,7 @@ Vector3 rayColorNormal(Ray r, Hittable world) {
 }
 
 // Return the color of the ray for the scenes using different random bounce
-Vector3 rayColorUNH(Ray r, Hittable world, int depth, char UnitNormalHemi) {
+Vector3 rayColorUNH(Ray r, Hittable world, int depth, float acne, char UNH) {
 
   // If the ray bounced more than allowed, return black
   if (depth <= 0) {
@@ -67,22 +67,22 @@ Vector3 rayColorUNH(Ray r, Hittable world, int depth, char UnitNormalHemi) {
   }
 
   // Search the world for a hit
-  HitRecord rec = world.hit(r, 0.001, infinity);
+  HitRecord rec = world.hit(r, acne, infinity);
 
   // If the ray hit, return the correct color based on what the ray bounced on
   if (rec.isHit) {
 
     // Use the correct random bounce algorithm
     Vector3 random = randomUnit();
-    if (UnitNormalHemi == 'n') {
+    if (UNH == 'n') {
       random = randomUnitNormalized();
-    } else if (UnitNormalHemi == 'h') {
+    } else if (UNH == 'h') {
       random = randomHemisphere(rec.normal);
     }
 
     // Calculate where the ray bounce and recursively call the same algorithm to calculate the actual color
-    Vector3 target = rec.p.add(rec.normal).add(random);
-    return rayColorUNH(new Ray(rec.p, target.sub(rec.p)), world, depth - 1, UnitNormalHemi);
+    Vector3 target = rec.point.add(rec.normal).add(random);
+    return rayColorUNH(new Ray(rec.point, target.sub(rec.point)), world, depth - 1, acne, UNH);
   }
 
   // Return the sky gradient if the ray hit nothing
@@ -104,14 +104,14 @@ Vector3 RayColor(Ray r, Hittable world, int depth) {
   if (rec.isHit) {
 
     // Get the ray info based on the material
-    RayInfo rc = rec.mat.scatter(r, rec);
+    RayInfo rInfo = rec.mat.scatter(r, rec);
 
     // If the ray was reflected
-    if (rc.hasRay) {
+    if (rInfo.hasRay) {
 
       // Recursively call the same algorithm to calculate the actual color
-      Vector3 c = rc.c;
-      Vector3 col = RayColor(rc.r, world, depth - 1);
+      Vector3 c = rInfo.col;
+      Vector3 col = RayColor(rInfo.r, world, depth - 1);
       return new Vector3((c.x * col.x) / 256, (c.y * col.y) / 256, (c.z * col.z) / 256);
     }
 
@@ -127,15 +127,15 @@ Vector3 RayColor(Ray r, Hittable world, int depth) {
 class RayInfo {
   boolean hasRay;
   Ray r;
-  Vector3 c;
+  Vector3 col;
 
   // The constructors
   RayInfo() {
     hasRay = false;
   }
-  RayInfo(Ray _r, Vector3 col) {
+  RayInfo(Ray _r, Vector3 _col) {
     hasRay = true;
     r = _r;
-    c = col;
+    col = _col;
   }
 }

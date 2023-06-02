@@ -8,7 +8,7 @@ class Scene {
   int h = int(w / screenRatio);
   int nSamplesPixel = 10;
   int maxDepthBounce = 50;
-  int printStep = 1;
+  int drawStep = 1;
   int scanLine = h;
 
   // Variables for the camera
@@ -25,12 +25,12 @@ class Scene {
 
   // Others
   color[][] scene = new color[h][w];
-  int drawn = h;
-  int nScene = 0;
+  int drawLine = h;
+  int numberScene = 0;
 
   // Construtor
-  Scene(int _nScene) {
-    nScene = _nScene;
+  Scene(int _numberScene) {
+    numberScene = _numberScene;
   }
 
   // What to update when changing scenes
@@ -43,7 +43,9 @@ class Scene {
     windowResize(w, h);
 
     // Restart to draw when we last stoped
-    scanLine = drawn;
+    scanLine = drawLine;
+
+    startTimer();
   }
 
   // What to update when changing the size of the screen
@@ -53,7 +55,7 @@ class Scene {
     w = _w;
     h = int(w / screenRatio);
     scene = new color[h][w];
-    drawn = h;
+    drawLine = h;
   }
 
   // Create the scene for uv
@@ -64,9 +66,9 @@ class Scene {
     w = 512;
     h = int(w / screenRatio);
     nSamplesPixel = 1;
-    printStep = w;
+    drawStep = w;
     scene = new color[h][w];
-    drawn = h;
+    drawLine = h;
   }
 
   // Create the scene for the gradient
@@ -74,7 +76,7 @@ class Scene {
 
     // Change the variables to fit the scene
     nSamplesPixel = 1;
-    printStep = 100;
+    drawStep = 100;
 
     // Setup camera
     camera = new Camera(lookFrom, lookAt, vectorUp, zoom, screenRatio, 0, distFocus);
@@ -85,7 +87,7 @@ class Scene {
 
     // Change the variables to fit the scene
     nSamplesPixel = 1;
-    printStep = 100;
+    drawStep = 100;
 
     // Setup camera
     camera = new Camera(lookFrom, lookAt, vectorUp, zoom, screenRatio, 0, distFocus);
@@ -94,10 +96,10 @@ class Scene {
     Lambertian matSphere = new Lambertian(new Vector3(255, 0, 0));
 
     // spheres
-    Sphere Sphere = new Sphere(new Vector3(0, 0, -1), 0.5, matSphere);
+    Sphere sphere = new Sphere(new Vector3(0, 0, -1), 0.5, matSphere);
 
     // Add the spheres in the world
-    world.add(Sphere);
+    world.add(sphere);
   }
 
   // Create the scene for the sphere with the color beeing the normal
@@ -105,7 +107,7 @@ class Scene {
 
     // Change the variables to fit the scene
     nSamplesPixel = 1;
-    printStep = 10;
+    drawStep = 10;
 
     // Setup camera
     camera = new Camera(lookFrom, lookAt, vectorUp, zoom, screenRatio, 0, distFocus);
@@ -114,10 +116,10 @@ class Scene {
     Lambertian matSphere = new Lambertian(new Vector3(0, 255, 0));
 
     // spheres
-    Sphere Sphere = new Sphere(new Vector3(0, 0, -1), 0.5, matSphere);
+    Sphere sphere = new Sphere(new Vector3(0, 0, -1), 0.5, matSphere);
 
     // Add the spheres in the world
-    world.add(Sphere);
+    world.add(sphere);
   }
 
   // Create the scene for the 2 spheres with the color beeing the normal
@@ -125,7 +127,7 @@ class Scene {
 
     // Change the variables to fit the scene (can change the number of samples for anti-aliasing)
     nSamplesPixel = _nSamplesPixel;
-    printStep = 10;
+    drawStep = 10;
 
     // Setup camera
     camera = new Camera(lookFrom, lookAt, vectorUp, zoom, screenRatio, 0, distFocus);
@@ -136,11 +138,11 @@ class Scene {
 
     // spheres
     Sphere ground = new Sphere(new Vector3(0, -100.5, -1), 100, matGround);
-    Sphere Sphere = new Sphere(new Vector3(0, 0, -1), 0.5, matSphere);
+    Sphere sphere = new Sphere(new Vector3(0, 0, -1), 0.5, matSphere);
 
     // Add the spheres in the world
     world.add(ground);
-    world.add(Sphere);
+    world.add(sphere);
   }
 
   // Create the scene for the normal render
@@ -312,7 +314,29 @@ class Scene {
 
   // Create the scene for the distant camera view
   void createDistantView() {
-    createHollowGlass();
+
+    // Setup camera
+    camera = new Camera(lookFrom, lookAt, vectorUp, zoom, screenRatio, 0, distFocus);
+
+    // Materials
+    Lambertian matGround = new Lambertian(new Vector3(204, 204, 0));
+    Lambertian matCenter = new Lambertian(new Vector3(25, 51, 128));
+    Dielectric matLeft = new Dielectric(1.5);
+    Metal matRight = new Metal(new Vector3(204, 153, 51), 0.0);
+
+    // spheres
+    Sphere ground = new Sphere(new Vector3(0, -100.5, -1), 100, matGround);
+    Sphere center = new Sphere(new Vector3(0, 0, -1), 0.5, matCenter);
+    Sphere left = new Sphere(new Vector3(-1, 0, -1), 0.5, matLeft);
+    Sphere leftInside = new Sphere(new Vector3(-1, 0, -1), -0.45, matLeft);
+    Sphere right = new Sphere(new Vector3(1, 0, -1), 0.5, matRight);
+
+    // Add the spheres in the world
+    world.add(ground);
+    world.add(center);
+    world.add(left);
+    world.add(leftInside);
+    world.add(right);
 
     // Change the camera to fit the scene
     lookFrom = new Vector3(-2, 2, 1);
@@ -332,7 +356,7 @@ class Scene {
 
   // Create the scene for the focused spheres
   void createDefocusBlur() {
-    createHollowGlass();
+    createDistantView();
 
     // Change the camera to fit the scene
     lookFrom = new Vector3(3, 3, 2);
@@ -351,7 +375,7 @@ class Scene {
     h = int(w / screenRatio);
     nSamplesPixel = 5;
     scene = new color[h][w];
-    drawn = h;
+    drawLine = h;
 
     // Change the camera to fit the scene
     lookFrom = new Vector3(13, 2, 3);
@@ -375,14 +399,14 @@ class Scene {
 
         // Restrict the placement of the small spheres
         if (center.sub(new Vector3(4, 0.2, 0)).length() > 0.9) {
-          Material matS;
+          Material matSphere;
 
           // Smooth material 80% of the time
           if (material < 0.8) {
 
             // Get a random color
             Vector3 albedo = new Vector3(random(0, 255), random(0, 255), random(0, 255));
-            matS = new Lambertian(albedo);
+            matSphere = new Lambertian(albedo);
           }
 
           // Metal material 15% of the time
@@ -391,17 +415,17 @@ class Scene {
             // Get a random color and fuzzyness
             Vector3 albedo = new Vector3(random(128, 255), random(128, 255), random(128, 255));
             float fuzzyness = random(0, 0.5);
-            matS = new Metal(albedo, fuzzyness);
+            matSphere = new Metal(albedo, fuzzyness);
           }
 
           // Glass material 5% of the time
           else {
-            matS = new Dielectric(1.5);
+            matSphere = new Dielectric(1.5);
           }
 
           // Create the sphere at center with the matS material and add it to the world
-          Sphere s = new Sphere(center, 0.2, matS);
-          world.add(s);
+          Sphere sphere = new Sphere(center, 0.2, matSphere);
+          world.add(sphere);
         }
       }
     }
@@ -412,13 +436,13 @@ class Scene {
     Metal mat3 = new Metal(new Vector3(178, 153, 128), 0.0);
 
     // The big spheres
-    Sphere s1 = new Sphere(new Vector3(0, 1, 0), 1.0, mat1);
-    Sphere s2 = new Sphere(new Vector3(-4, 1, 0), 1.0, mat2);
-    Sphere s3 = new Sphere(new Vector3(4, 1, 0), 1.0, mat3);
+    Sphere sphere1 = new Sphere(new Vector3(0, 1, 0), 1.0, mat1);
+    Sphere sphere2 = new Sphere(new Vector3(-4, 1, 0), 1.0, mat2);
+    Sphere sphere3 = new Sphere(new Vector3(4, 1, 0), 1.0, mat3);
 
     // Add the big spheres in the world
-    world.add(s1);
-    world.add(s2);
-    world.add(s3);
+    world.add(sphere1);
+    world.add(sphere2);
+    world.add(sphere3);
   }
 }

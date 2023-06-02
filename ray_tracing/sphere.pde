@@ -28,12 +28,12 @@ class Sphere implements Hittable {
     if (discriminant < 0) {
       return new HitRecord();
     }
-    float sqrtd = sqrt(discriminant);
+    float sqrtD = sqrt(discriminant);
 
     // Calculate if the hit is between the range tMin and tMax
-    float root = (-halfB - sqrtd) / a;
+    float root = (-halfB - sqrtD) / a;
     if (root < tMin || tMax < root) {
-      root = (-halfB + sqrtd) / a;
+      root = (-halfB + sqrtD) / a;
       if (root < tMin || tMax < root) {
 
         // The hit as outside the range
@@ -43,9 +43,9 @@ class Sphere implements Hittable {
 
     // Create the hit record of where the point hit
     float t = root;
-    Vector3 p = r.at(t);
-    Vector3 outwardNormal = p.sub(center).div(radius);
+    Vector3 point = r.at(t);
+    Vector3 outwardNormal = point.sub(center).div(radius);
 
-    return new HitRecord(p, mat, t, r, outwardNormal);
+    return new HitRecord(point, mat, t, r, outwardNormal);
   }
 }

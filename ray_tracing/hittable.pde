@@ -11,11 +11,6 @@ class HittableList implements Hittable {
   HittableList() {
   }
 
-  // Clear the list
-  void clear() {
-    objects.clear();
-  }
-
   // Add a list of Hittables to the existing list
   void add(Hittable object) {
     objects.add(object);
@@ -41,7 +36,7 @@ class HittableList implements Hittable {
 // Struct to hold the hit record
 class HitRecord {
   boolean isHit;
-  Vector3 p;
+  Vector3 point;
   Vector3 normal;
   Material mat;
   float t;
@@ -51,9 +46,9 @@ class HitRecord {
   HitRecord() {
     isHit = false;
   }
-  HitRecord(Vector3 point, Material m, float _t, Ray r, Vector3 outwardNormal) {
+  HitRecord(Vector3 p, Material m, float _t, Ray r, Vector3 outwardNormal) {
     isHit = true;
-    p = point;
+    point = p;
     mat = m;
     t = _t;
     setFaceNormal(r, outwardNormal);
