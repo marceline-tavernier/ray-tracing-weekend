@@ -140,7 +140,7 @@ void UNHLoop(Scene scene, boolean gammaCorection, float acne, char UNH) {
         for (int s = 0; s < scene.nSamplesPixel; s++) {
 
           // Get the color of what the ray as hit from the rayColorUNH function
-          pixelColor = pixelColor.add(rayColorUNH(getRay(i, j, scene.camera), scene.world, scene.nSamplesPixel, acne, UNH));
+          pixelColor = pixelColor.add(rayColorUNH(getRay(i, j, scene.camera), scene.world, scene.maxDepthBounce, acne, UNH));
         }
 
         // Set the pixel color accordingly
@@ -180,7 +180,7 @@ void defaultLoop(Scene scene) {
         for (int s = 0; s < scene.nSamplesPixel; s++) {
 
           // Get the color of what the ray as hit from the RayColor function
-          pixelColor = pixelColor.add(RayColor(getRay(i, j, scene.camera), scene.world, scene.nSamplesPixel));
+          pixelColor = pixelColor.add(RayColor(getRay(i, j, scene.camera), scene.world, scene.maxDepthBounce));
         }
 
         // Set the pixel color accordingly
