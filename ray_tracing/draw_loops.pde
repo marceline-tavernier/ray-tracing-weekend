@@ -1,4 +1,8 @@
+
+// The loop for when the generation is finished
 void finishLoop(Scene scene) {
+
+  // For all the pixel of the screen, draw the image from the scene memory
   for (int j = scene.h; j > max(0, scene.drawLine - scene.drawStep); j--) {
     for (int i = 0; i < width; i++) {
       set(i, height - j, scene.scene[scene.h - j][i]);
@@ -6,7 +10,7 @@ void finishLoop(Scene scene) {
   }
 }
 
-// If the drawing is finished
+// The loop for the first scene
 void uvLoop() {
 
   // For each frame, start drawing at scanLine (start at the top) for printStep lines
@@ -16,27 +20,37 @@ void uvLoop() {
     for (int i = 0; i < width; i++) {
       float u = float(i) / (width - 1);
       float v = float(j) / (height - 1);
+
+      // Set the pixel color based on the coordinate
       setPixel(i, j, new Vector3(u * 255, v * 255, 64), 1, false);
     }
   }
+
+  // The drawing is done
   printDone();
 }
 
+// Get the ray from the camera at i, j
 Ray getRay(int i, int j, Camera camera) {
   float u = (i + random(0.0, 1.0)) / (width - 1);
   float v = (j + random(0.0, 1.0)) / (height - 1);
   return camera.getRay(u, v);
 }
 
-void endFrame(Scene scene) {
+// Update the variables when a line is finished drawing
+void endLine(Scene scene) {
+
+  // Change the line to start drawing from (print what's in the scene memory for what's above)
   scene.drawLine -= scene.drawStep;
 
   // Decrement the scanLine to draw the next printStep lines
   scene.scanLine -= scene.drawStep;
 }
 
-// If the drawing is finished
+// The loop for the red sphere scene
 void redSphereLoop(Scene scene) {
+
+  // If the drawing is finished
   finishLoop(scene);
   if (scene.scanLine < 0) {
 
@@ -49,6 +63,8 @@ void redSphereLoop(Scene scene) {
 
       // Go over each pixel on the line
       for (int i = 0; i < width; i++) {
+
+        // Get the color of what the ray as hit from the rayColorRedSphere function
         setPixel(i, j, rayColorRedSphere(getRay(i, j, scene.camera), scene.world), 1, false);
       }
 
@@ -56,12 +72,15 @@ void redSphereLoop(Scene scene) {
       printProgress(j - 1, height);
     }
 
-    endFrame(scene);
+    // Update the variables at the end of printStep lines
+    endLine(scene);
   }
 }
 
 // If the drawing is finished
 void normalLoop(Scene scene) {
+
+  // If the drawing is finished
   finishLoop(scene);
   if (scene.scanLine < 0) {
 
@@ -74,10 +93,18 @@ void normalLoop(Scene scene) {
 
       // Go over each pixel on the line
       for (int i = 0; i < width; i++) {
+
+        // Default color is black
         Vector3 pixelColor = new Vector3(0, 0, 0);
+
+        // For nSamplesPixel, shoot a ray from this pixel
         for (int s = 0; s < scene.nSamplesPixel; s++) {
+
+          // Get the color of what the ray as hit from the rayColorNormal function
           pixelColor = pixelColor.add(rayColorNormal(getRay(i, j, scene.camera), scene.world));
         }
+
+        // Set the pixel color accordingly
         setPixel(i, j, pixelColor, scene.nSamplesPixel, false);
       }
 
@@ -85,11 +112,14 @@ void normalLoop(Scene scene) {
       printProgress(j - 1, height);
     }
 
-    endFrame(scene);
+    // Update the variables at the end of printStep lines
+    endLine(scene);
   }
 }
 
 void UNHLoop(Scene scene, boolean gammaCorection, float acne, char UNH) {
+
+  // If the drawing is finished
   finishLoop(scene);
   if (scene.scanLine < 0) {
 
@@ -102,10 +132,18 @@ void UNHLoop(Scene scene, boolean gammaCorection, float acne, char UNH) {
 
       // Go over each pixel on the line
       for (int i = 0; i < width; i++) {
+
+        // Default color is black
         Vector3 pixelColor = new Vector3(0, 0, 0);
+
+        // For nSamplesPixel, shoot a ray from this pixel
         for (int s = 0; s < scene.nSamplesPixel; s++) {
+
+          // Get the color of what the ray as hit from the rayColorUNH function
           pixelColor = pixelColor.add(rayColorUNH(getRay(i, j, scene.camera), scene.world, scene.nSamplesPixel, acne, UNH));
         }
+
+        // Set the pixel color accordingly
         setPixel(i, j, pixelColor, scene.nSamplesPixel, gammaCorection);
       }
 
@@ -113,12 +151,15 @@ void UNHLoop(Scene scene, boolean gammaCorection, float acne, char UNH) {
       printProgress(j - 1, height);
     }
 
-    endFrame(scene);
+    // Update the variables at the end of printStep lines
+    endLine(scene);
   }
 }
 
 // If the drawing is finished
 void defaultLoop(Scene scene) {
+
+  // If the drawing is finished
   finishLoop(scene);
   if (scene.scanLine < 0) {
 
@@ -131,10 +172,18 @@ void defaultLoop(Scene scene) {
 
       // Go over each pixel on the line
       for (int i = 0; i < width; i++) {
+
+        // Default color is black
         Vector3 pixelColor = new Vector3(0, 0, 0);
+
+        // For nSamplesPixel, shoot a ray from this pixel
         for (int s = 0; s < scene.nSamplesPixel; s++) {
+
+          // Get the color of what the ray as hit from the RayColor function
           pixelColor = pixelColor.add(RayColor(getRay(i, j, scene.camera), scene.world, scene.nSamplesPixel));
         }
+
+        // Set the pixel color accordingly
         setPixel(i, j, pixelColor, scene.nSamplesPixel, true);
       }
 
@@ -142,6 +191,7 @@ void defaultLoop(Scene scene) {
       printProgress(j - 1, height);
     }
 
-    endFrame(scene);
+    // Update the variables at the end of printStep lines
+    endLine(scene);
   }
 }

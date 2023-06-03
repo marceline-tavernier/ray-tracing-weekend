@@ -2,12 +2,16 @@
 // Variable to define the range to search for a hit
 float infinity = 9_223_372_036_854_775_807.0;
 
+/////////////////////////////////
+
 // The class that represent the ray
 class Ray {
+
+  // The origin and direction of the ray
   Vector3 origin;
   Vector3 dir;
 
-  // Ray constructor
+  // The ray constructor
   Ray (Vector3 _origin, Vector3 direction) {
     origin = _origin;
     dir = direction;
@@ -125,6 +129,8 @@ Vector3 RayColor(Ray r, Hittable world, int depth) {
 
 // Struct to hold the ray info
 class RayInfo {
+
+  // The ray info
   boolean hasRay;
   Ray r;
   Vector3 col;

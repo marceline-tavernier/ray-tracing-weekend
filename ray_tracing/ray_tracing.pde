@@ -89,9 +89,8 @@ void setup() {
   finalScene = new Scene(20);
   finalScene.createFinalScene();
 
-  // Set the default scene to be the hollow glass one
-  currentScene = zoom;
-  currentScene.changeScene();
+  // Set the default scene to be the zoomed one
+  changeScene(zoom);
 
   // Set the frame rate high
   frameRate(500);
@@ -105,7 +104,7 @@ void setPixel(int x, int y, Vector3 rgb, int nSamples, boolean gammaCorection) {
   float g = rgb.y;
   float b = rgb.z;
 
-  // Scale to average into a color based on number of samples
+  // Scale to average into a color, based on number of samples
   float scale = 1.0 / nSamples;
 
   // If we want gamma corection
@@ -159,80 +158,89 @@ void draw() {
   }
 }
 
+// What to do when changing scenes
+void changeScene(Scene scene) {
+  currentScene = scene;
+  currentScene.changeScene();
+}
+
+// Change the number of samples per pixel (changing the quality of the image)
+// For the final scene, also change the screen size
+// Update the variables of the scene
+void updateQuality(int quality, int finalSceneSize) {
+
+  // Update the number of samples per pixel
+  currentScene.nSamplesPixel = quality;
+
+  // If it's the final scene, change the size
+  if (currentScene == finalScene) {
+    currentScene.changeScreenSize(finalSceneSize);
+  }
+
+  // Updates the variables needed
+  currentScene.drawLine = currentScene.h;
+  currentScene.changeScene();
+}
+
+// If we press a key
 void keyPressed() {
 
-  // If '+', '=' or '-', change the number of samples per pixel (changing the quality of the image)
-  // For the final scene, also change the screen size
-  // For the first few scene, this change nothing
-  // Update the variables of the scene
+  // If '+', '=' or '-', change the quality (doesn't apply for the scene with 1 nSamplesPixel at start (first few scenes only))
   if (currentScene.nSamplesPixel != 1) {
-    if (key == '+') {
-      currentScene.nSamplesPixel = 500;
-      if (currentScene == finalScene) {
-        currentScene.changeScreenSize(1200);
-      }
-      currentScene.drawLine = currentScene.h;
-    } else if (key == '-') {
-      currentScene.nSamplesPixel = 10;
-      if (currentScene == finalScene) {
-        currentScene.changeScreenSize(400);
-      }
-      currentScene.drawLine = currentScene.h;
+    if (key == '-') {
+      updateQuality(10, 400);
     } else if (key == '=') {
-      currentScene.nSamplesPixel = 100;
-      if (currentScene == finalScene) {
-        currentScene.changeScreenSize(800);
-      }
-      currentScene.drawLine = currentScene.h;
+      updateQuality(100, 800);
+    } else if (key == '+') {
+      updateQuality(500, 1200);
     }
   }
 
+  // If the 'Enter' key is pressed, take a screenshot
   if (key == ENTER || key == RETURN) {
     saveFrame("images/scene-" + nf(currentScene.numberScene, 2) + "-quality-" + nf(currentScene.nSamplesPixel, 3) + ".png");
   }
 
   // Change to the corresponding scene from 'A' to 'T'
   if (key == 'a' || key == 'A') {
-    currentScene = uv;
+    changeScene(uv);
   } else if (key == 'b' || key == 'B') {
-    currentScene = gradient;
+    changeScene(gradient);
   } else if (key == 'c' || key == 'C') {
-    currentScene = redSphere;
+    changeScene(redSphere);
   } else if (key == 'd' || key == 'D') {
-    currentScene = normalSphere;
+    changeScene(normalSphere);
   } else if (key == 'e' || key == 'E') {
-    currentScene = normalGround;
+    changeScene(normalGround);
   } else if (key == 'f' || key == 'F') {
-    currentScene = antiAliasing;
+    changeScene(antiAliasing);
   } else if (key == 'g' || key == 'G') {
-    currentScene = unitRender;
+    changeScene(unitRender);
   } else if (key == 'h' || key == 'H') {
-    currentScene = gammaRender;
+    changeScene(gammaRender);
   } else if (key == 'i' || key == 'I') {
-    currentScene = normalizedRender;
+    changeScene(normalizedRender);
   } else if (key == 'j' || key == 'J') {
-    currentScene = hemiSphereRender;
+    changeScene(hemiSphereRender);
   } else if (key == 'k' || key == 'K') {
-    currentScene = Metal;
+    changeScene(Metal);
   } else if (key == 'l' || key == 'L') {
-    currentScene = fuzzyMetal;
+    changeScene(fuzzyMetal);
   } else if (key == 'm' || key == 'M') {
-    currentScene = dielectric;
+    changeScene(dielectric);
   } else if (key == 'n' || key == 'N') {
-    currentScene = reflect;
+    changeScene(reflect);
   } else if (key == 'o' || key == 'O') {
-    currentScene = hollowGlass;
+    changeScene(hollowGlass);
   } else if (key == 'p' || key == 'P') {
-    currentScene = blueRed;
+    changeScene(blueRed);
   } else if (key == 'q' || key == 'Q') {
-    currentScene = distantView;
+    changeScene(distantView);
   } else if (key == 'r' || key == 'R') {
-    currentScene = zoom;
+    changeScene(zoom);
   } else if (key == 's' || key == 'S') {
-    currentScene = defocusBlur;
+    changeScene(defocusBlur);
   } else if (key == 't' || key == 'T') {
-    currentScene = finalScene;
+    changeScene(finalScene);
   }
-  
-  currentScene.changeScene();
 }

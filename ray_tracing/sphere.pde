@@ -1,6 +1,8 @@
 
 // The sphere class
 class Sphere implements Hittable {
+
+  // The parameters of the sphere
   Vector3 center;
   float radius;
   Material mat;

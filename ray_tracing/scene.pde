@@ -20,7 +20,7 @@ class Scene {
 
   Camera camera;
 
-  // Variables for the world
+  // Variable for the world
   HittableList world = new HittableList();
 
   // Others
@@ -95,7 +95,7 @@ class Scene {
     // Materials
     Lambertian matSphere = new Lambertian(new Vector3(255, 0, 0));
 
-    // spheres
+    // Spheres
     Sphere sphere = new Sphere(new Vector3(0, 0, -1), 0.5, matSphere);
 
     // Add the spheres in the world
@@ -115,7 +115,7 @@ class Scene {
     // Materials
     Lambertian matSphere = new Lambertian(new Vector3(0, 255, 0));
 
-    // spheres
+    // Spheres
     Sphere sphere = new Sphere(new Vector3(0, 0, -1), 0.5, matSphere);
 
     // Add the spheres in the world
@@ -136,7 +136,7 @@ class Scene {
     Lambertian matGround = new Lambertian(new Vector3(0, 255, 0));
     Lambertian matSphere = new Lambertian(new Vector3(0, 255, 0));
 
-    // spheres
+    // Spheres
     Sphere ground = new Sphere(new Vector3(0, -100.5, -1), 100, matGround);
     Sphere sphere = new Sphere(new Vector3(0, 0, -1), 0.5, matSphere);
 
@@ -177,7 +177,7 @@ class Scene {
     Metal matLeft = new Metal(new Vector3(204, 204, 204), 0.0);
     Metal matRight = new Metal(new Vector3(204, 153, 51), 0.0);
 
-    // spheres
+    // Spheres
     Sphere ground = new Sphere(new Vector3(0, -100.5, -1), 100, matGround);
     Sphere center = new Sphere(new Vector3(0, 0, -1), 0.5, matCenter);
     Sphere left = new Sphere(new Vector3(-1, 0, -1), 0.5, matLeft);
@@ -202,7 +202,7 @@ class Scene {
     Metal matLeft = new Metal(new Vector3(204, 204, 204), 0.3);
     Metal matRight = new Metal(new Vector3(204, 153, 51), 1.0);
 
-    // spheres
+    // Spheres
     Sphere ground = new Sphere(new Vector3(0, -100.5, -1), 100, matGround);
     Sphere center = new Sphere(new Vector3(0, 0, -1), 0.5, matCenter);
     Sphere left = new Sphere(new Vector3(-1, 0, -1), 0.5, matLeft);
@@ -227,7 +227,7 @@ class Scene {
     DielectricNoReflect matLeft = new DielectricNoReflect(1.5);
     Metal matRight = new Metal(new Vector3(204, 153, 51), 1.0);
 
-    // spheres
+    // Spheres
     Sphere ground = new Sphere(new Vector3(0, -100.5, -1), 100, matGround);
     Sphere center = new Sphere(new Vector3(0, 0, -1), 0.5, matCenter);
     Sphere left = new Sphere(new Vector3(-1, 0, -1), 0.5, matLeft);
@@ -252,7 +252,7 @@ class Scene {
     Dielectric matLeft = new Dielectric(1.5);
     Metal matRight = new Metal(new Vector3(204, 153, 51), 0.0);
 
-    // spheres
+    // Spheres
     Sphere ground = new Sphere(new Vector3(0, -100.5, -1), 100, matGround);
     Sphere center = new Sphere(new Vector3(0, 0, -1), 0.5, matCenter);
     Sphere left = new Sphere(new Vector3(-1, 0, -1), 0.5, matLeft);
@@ -277,7 +277,7 @@ class Scene {
     Dielectric matLeft = new Dielectric(1.5);
     Metal matRight = new Metal(new Vector3(204, 153, 51), 0.0);
 
-    // spheres
+    // Spheres
     Sphere ground = new Sphere(new Vector3(0, -100.5, -1), 100, matGround);
     Sphere center = new Sphere(new Vector3(0, 0, -1), 0.5, matCenter);
     Sphere left = new Sphere(new Vector3(-1, 0, -1), 0.5, matLeft);
@@ -302,7 +302,7 @@ class Scene {
     Lambertian matLeft = new Lambertian(new Vector3(0, 0, 255));
     Lambertian matRight = new Lambertian(new Vector3(255, 0, 0));
 
-    // spheres
+    // Spheres
     float R = cos(PI / 4);
     Sphere left = new Sphere(new Vector3(-R, 0, -1), R, matLeft);
     Sphere right = new Sphere(new Vector3(R, 0, -1), R, matRight);
@@ -324,7 +324,7 @@ class Scene {
     Dielectric matLeft = new Dielectric(1.5);
     Metal matRight = new Metal(new Vector3(204, 153, 51), 0.0);
 
-    // spheres
+    // Spheres
     Sphere ground = new Sphere(new Vector3(0, -100.5, -1), 100, matGround);
     Sphere center = new Sphere(new Vector3(0, 0, -1), 0.5, matCenter);
     Sphere left = new Sphere(new Vector3(-1, 0, -1), 0.5, matLeft);
