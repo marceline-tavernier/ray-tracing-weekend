@@ -45,6 +45,7 @@ class Scene {
     // Restart to draw when we last stoped
     scanLine = drawLine;
 
+    // Start the timer
     startTimer();
   }
 
@@ -314,6 +315,9 @@ class Scene {
 
   // Create the scene for the distant camera view
   void createDistantView() {
+    
+    // Change the camera to fit the scene
+    lookFrom = new Vector3(-2, 2, 1);
 
     // Setup camera
     camera = new Camera(lookFrom, lookAt, vectorUp, zoom, screenRatio, 0, distFocus);
@@ -337,13 +341,6 @@ class Scene {
     world.add(left);
     world.add(leftInside);
     world.add(right);
-
-    // Change the camera to fit the scene
-    lookFrom = new Vector3(-2, 2, 1);
-    lookAt = new Vector3(0, 0, -1);
-
-    // Setup camera
-    camera = new Camera(lookFrom, lookAt, vectorUp, zoom, screenRatio, 0, distFocus);
   }
 
   // Create the scene for the distant zoomed camera view
@@ -360,7 +357,6 @@ class Scene {
 
     // Change the camera to fit the scene
     lookFrom = new Vector3(3, 3, 2);
-    lookAt = new Vector3(0, 0, -1);
 
     // Setup camera
     camera = new Camera(lookFrom, lookAt, vectorUp, 20, screenRatio, 2, lookFrom.sub(lookAt).length());
