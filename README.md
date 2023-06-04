@@ -2,7 +2,7 @@
 
 Ray tracing #1 : In one weekend
 
-![Ray tracing in one weekend final scene image](https://github.com/marceline-tavernier/ray-tracing-weekend/assets/120074055/8e7d9b6f-2ef6-48f0-a53b-9931ca53fa7a)
+[Ray tracing in one weekend video](https://github.com/marceline-tavernier/ray-tracing-weekend/assets/120074055/fb6a7475-134a-468b-9c83-18b5ced3117a)
 
 ## Description
 - Visualize all the ray tracing scenes explored in [this book](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
